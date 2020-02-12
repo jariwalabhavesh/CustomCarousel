@@ -7,13 +7,15 @@
  */
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View ,SafeAreaView } from 'react-native'
 import MovieHome from './src/'
 
 export default class App extends Component {
   render() {
     return (
-      <MovieHome />
+      <SafeAreaView style={{flex:1}}>
+        <MovieHome />
+      </SafeAreaView>
     );
   }
 }
