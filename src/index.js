@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, Platform } from 'react-native'
 import styles from './style'
 import { cardPerSlide } from './config'
 import CarouselSlide from './components/Slide'
@@ -15,20 +15,23 @@ export default class MovieHome extends Component {
     // Initially state 
     this.state = {
       totalSlide: 0,
-      currentSlide: 1
+      currentSlide: 1,
+      isNext: false,
+      isPrev: false
     }
   }
 
   // function will find out total no of slide and set to state
   setTotalSlides = (contentWidth) => {
-    const { totalSlide } = this.state
+    const { totalSlide, currentSlide } = this.state
     // contentWidth received from onContentSizeChange
     if (contentWidth !== 0) {
-      const approxSlide = contentWidth / screenWidth  
+      const approxSlide = contentWidth / screenWidth
       if (totalSlide !== parseInt(approxSlide)) {
         this.setState({
           totalSlide: parseInt(Math.ceil(approxSlide.toFixed(2)))
         })
+        this.calculateNextPrev(parseInt(approxSlide), currentSlide)
       }
     }
   }
@@ -47,6 +50,7 @@ export default class MovieHome extends Component {
       return
     }
     const { nativeEvent } = e
+    const { totalSlide} = this.state
     if (nativeEvent && nativeEvent.contentOffset) {
       let currentSlide = 1
       if (nativeEvent.contentOffset.x === 0) {
@@ -56,11 +60,72 @@ export default class MovieHome extends Component {
         currentSlide = parseInt(Math.ceil(approxCurrentSlide.toFixed(2)) + 1)
         this.setCurrentSlide(currentSlide)
       }
+      this.calculateNextPrev(totalSlide, currentSlide)
+    }
+  }
+
+  goToNext = () => {
+    const { currentSlide } = this.state
+    if (this.stepCarousel) {
+      const scrollPoint = currentSlide * screenWidth
+      this.stepCarousel.scrollTo({ x: scrollPoint, y: 0, animated: true })
+      // following condition is for android only because in android onMomentumScrollEnd doesn't
+      // call when we scrollContent with scroll view reference.
+      if (Platform.OS === 'android') {
+        this.handleScrollEnd({ nativeEvent: { contentOffset: { y: 0, x: scrollPoint } } })
+      }
+    }
+  }
+
+  goToPrev = () => {
+    const { currentSlide } = this.state
+    if (this.stepCarousel) {
+      const pageToGo = currentSlide - 2
+      const scrollPoint = (pageToGo) * screenWidth
+      this.stepCarousel.scrollTo({ x: scrollPoint, y: 0, animated: true })
+      // following condition is for android only because in android onMomentumScrollEnd doesn't
+      // call when we scrollContent with scrollview reference.
+      if (Platform.OS === 'android') {
+        this.handleScrollEnd({ nativeEvent: { contentOffset: { y: 0, x: scrollPoint } } })
+      }
+    }
+  }
+
+  setNext = (status) => {
+    const { isNext } = this.state
+    if (status !== isNext) {
+      this.setState({
+        isNext: status
+      })
+    }
+  }
+
+  setPrev = (status) => {
+    const { isPrev } = this.state
+    if (status !== isPrev) {
+      this.setState({
+        isPrev: status
+      })
+    }
+  }
+
+  calculateNextPrev = (totalPage, currentPage) => {
+    if (totalPage > currentPage) {
+      this.setNext(true)
+    }
+    if (currentPage === 1) {
+      this.setPrev(false)
+    }
+    if (currentPage === totalPage) {
+      this.setNext(false)
+    }
+    if (currentPage > 1) {
+      this.setPrev(true)
     }
   }
 
   render() {
-    const { totalSlide, currentSlide } = this.state
+    const { totalSlide, currentSlide, isNext, isPrev } = this.state
     const noOfSlides = Math.ceil(movies.length / cardPerSlide)
     return (
       <View style={styles.container}>
@@ -90,10 +155,10 @@ export default class MovieHome extends Component {
           <Text style={styles.countText}>Current Slide : {currentSlide}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={[styles.button, !isPrev && styles.disable ]} onPress={this.goToPrev} disabled={!isPrev}>
             <Text style={styles.buttonText}>Prev</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button]}>
+          <TouchableOpacity style={[styles.button, !isNext && styles.disable]} onPress={this.goToNext} disabled={!isNext}>
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
         </View>
