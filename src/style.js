@@ -48,6 +48,12 @@ const styles = StyleSheet.create({
   },
   disable: {
     opacity: 0.5
+  },
+  cardCountContainer: {
+    paddingBottom: 20
+  },
+  countText:{
+    fontSize: 26
   }
 });
 

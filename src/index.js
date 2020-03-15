@@ -63,6 +63,7 @@ export default class MovieHome extends Component {
   }
 
   render() {
+    const { totalSlide, currentSlide } = this.state
     const noOfSlides = Math.ceil(movies.length / cardPerSlide)
     return (
       <View style={styles.container}>
@@ -87,6 +88,10 @@ export default class MovieHome extends Component {
             return <CarouselSlide key={i} cards={movies.slice(startPosition, endPosition)} />
           })}
         </ScrollView>
+        <View style={styles.cardCountContainer}>
+          <Text style={styles.countText}>Total Slides    : {totalSlide}</Text>
+          <Text style={styles.countText}>Current Slide : {currentSlide}</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Prev</Text>
