@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
 import styles from './style'
-
+import { cardPerSlide } from './config'
+import CarouselSlide from './components/Slide'
+import movies from './data'
 
 export default class MovieHome extends Component {
   render() {
+    const noOfSlides = Math.ceil(movies.length / cardPerSlide)
     return (
       <View style={styles.container}>
         <View style={styles.navBar}>
@@ -21,26 +24,12 @@ export default class MovieHome extends Component {
           onContentSizeChange={this.setTotalPage}
           onMomentumScrollEnd={this.handleScrollEnd}
         >
-          <View style={styles.slide}>
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg' }} style={styles.imageCard} />
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/z7FCF54Jvzv9Anxyf82QeqFXXOO.jpg' }} style={styles.imageCard} />
-          </View>
-          <View style={styles.slide}>
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/3Nt3v1uzUgfSuVARD1AnI9g9Zl9.jpg' }} style={styles.imageCard} />
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/pThyQovXQrw2m0s9x82twj48Jq4.jpg' }} style={styles.imageCard} />
-          </View>
-          <View style={styles.slide}>
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/tgcrYiyG75iDcyk3en9NzZis0dh.jpg' }} style={styles.imageCard} />
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/y95lQLnuNKdPAzw9F9Ab8kJ80c3.jpg' }} style={styles.imageCard} />
-          </View>
-          <View style={styles.slide}>
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/h6Wi81XNXCjTAcdstiCLRykN3Pa.jpg' }} style={styles.imageCard} />
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/d9PhCnofBEeQGR3lwywTjWKBiXj.jpg' }} style={styles.imageCard} />
-          </View>
-          <View style={styles.slide}>
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/qR2sOAnLcdysU1be1PO6Y0pfuR5.jpg' }} style={styles.imageCard} />
-            <Image source={{ uri: 'https://image.tmdb.org/t/p/w1280/yTIsWzMUsrKdNngIEf15Iz1n3SS.jpg' }} style={styles.imageCard} />
-          </View>
+          {[...Array(noOfSlides)].map((e, i) => {
+            const startIndex = i + 1
+            const startPosition = ((startIndex + (startIndex - 1)) - 1)
+            const endPosition = (startIndex * 2)
+            return <CarouselSlide key={i} cards={movies.slice(startPosition, endPosition)} />
+          })}
         </ScrollView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button}>

@@ -1,14 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native'
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
-
-
-export const cardPerSlide = 2
-export const cardPadding = 15
-export const paddingAround = cardPadding * 2 // slide horizontal padding
-export const cardBetweenPadding = cardPadding * (cardPerSlide - 1)
-export const totalPadding = paddingAround + cardBetweenPadding
-export const imageWidth = (screenWidth - totalPadding) / cardPerSlide
-export const imageHeight = (imageWidth / (2 / 3))
+import { StyleSheet } from 'react-native'
+import { imageHeight } from './config'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +23,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   scrollViewContainerStyle: {
-    alignContent: 'center', justifyContent: 'center', alignItems: 'center', height: imageHeight + 50
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: imageHeight + 50
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -54,16 +48,6 @@ const styles = StyleSheet.create({
   },
   disable: {
     opacity: 0.5
-  },
-  slide: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: screenWidth,
-    paddingHorizontal: cardPadding
-  },
-  imageCard: {
-    width: imageWidth,
-    height: imageHeight
   }
 });
 
