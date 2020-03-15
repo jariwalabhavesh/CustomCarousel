@@ -12,24 +12,19 @@ export default class MovieHome extends Component {
   constructor(props) {
     super(props)
 
+    // Initially state 
     this.state = {
       totalSlide: 0,
       currentSlide: 1
     }
   }
 
-  onNext = () => {
-
-  }
-
-  onPrev = () => {
-
-  }
-
+  // function will find out total no of slide and set to state
   setTotalSlides = (contentWidth) => {
     const { totalSlide } = this.state
+    // contentWidth received from onContentSizeChange
     if (contentWidth !== 0) {
-      const approxSlide = contentWidth / screenWidth
+      const approxSlide = contentWidth / screenWidth  
       if (totalSlide !== parseInt(approxSlide)) {
         this.setState({
           totalSlide: parseInt(Math.ceil(approxSlide.toFixed(2)))
@@ -45,6 +40,8 @@ export default class MovieHome extends Component {
   }
 
 
+  // function will identify current slide visible on screen
+  // Also maintaining current slide on carousel swipe.
   handleScrollEnd = (e) => {
     if (!e) {
       return
