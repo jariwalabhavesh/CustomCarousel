@@ -1,8 +1,14 @@
 import { StyleSheet, Dimensions } from 'react-native'
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
-const imageWidth = (screenWidth - 45) / 2
-const imageHeight = (imageWidth / (2 / 3))
+
+export const cardPerSlide = 2
+export const cardPadding = 15
+export const paddingAround = cardPadding * 2 // slide horizontal padding
+export const cardBetweenPadding = cardPadding * (cardPerSlide - 1)
+export const totalPadding = paddingAround + cardBetweenPadding
+export const imageWidth = (screenWidth - totalPadding) / cardPerSlide
+export const imageHeight = (imageWidth / (2 / 3))
 
 const styles = StyleSheet.create({
   container: {
@@ -48,6 +54,16 @@ const styles = StyleSheet.create({
   },
   disable: {
     opacity: 0.5
+  },
+  slide: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: screenWidth,
+    paddingHorizontal: cardPadding
+  },
+  imageCard: {
+    width: imageWidth,
+    height: imageHeight
   }
 });
 
